@@ -1,8 +1,12 @@
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 function Register() {
-  const handleRegister = async (e) => {
+  const navigate = useNavigate();
+  alert("Registration successful!");
+  navigate("/login");
+  
+ const handleRegister = async (e) => {
   e.preventDefault();
 
   if (password !== confirmPassword) {
@@ -11,19 +15,32 @@ function Register() {
   }
 
   try {
-    console.log("Register data:", {
-      name,
-      email,
-      password,
-    });
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/auth/register",
+      {
+        name,
+        email,
+        password,
+        phone,
+        role: "student",
+      }
+    );
+
+    console.log("Register Response:", response.data);
+
+    alert("Registration successful!");
   } catch (error) {
-    console.log(error);
+    console.log(
+      "Register Error:",
+      error.response?.data || error.message
+    );
   }
 };
   const [name, setName] = useState("");
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
+const [phone, setPhone] = useState("");
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
 
@@ -84,6 +101,20 @@ const [confirmPassword, setConfirmPassword] = useState("");
               className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {/* Phone */}
+<div className="mb-5">
+  <label className="block text-gray-700 font-medium mb-2">
+    Phone
+  </label>
+
+  <input
+    type="tel"
+    value={phone}
+    onChange={(e) => setPhone(e.target.value)}
+    placeholder="Enter your phone number"
+    className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
 
           {/* Confirm Password */}
           <div className="mb-6">
