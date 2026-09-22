@@ -2,35 +2,15 @@ const Job = require("../models/jobModel");
 
 const createJob = async (req, res) => {
   try {
-    const {
-      title,
-      company,
-      location,
-      salary,
-      experience,
-      jobType,
-      skills,
-      description,
-      requirements,
-    } = req.body;
-
-    if (!title || !company || !location || !jobType || !description) {
-      return res.status(400).json({
-        message: "Required fields are missing",
-      });
-    }
+    const { title, company, description, location, salary, skills } = req.body;
 
     const job = await Job.create({
       title,
       company,
+      description,
       location,
       salary,
-      experience,
-      jobType,
       skills,
-      description,
-      requirements,
-      postedBy: req.user.id,
     });
 
     res.status(201).json({
@@ -45,6 +25,23 @@ const createJob = async (req, res) => {
   }
 };
 
+const getJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find();
+
+    res.status(200).json({
+      message: "Jobs fetched successfully",
+      jobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch jobs",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createJob,
+  getJobs,
 };
