@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
 
     if (!authHeader) {
       return res.status(401).json({
-        message: "No token provided",
+        message: "Authorization token is required",
       });
     }
 
@@ -20,7 +20,6 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
 
     next();
-
   } catch (error) {
     return res.status(401).json({
       message: "Invalid or expired token",

@@ -1,5 +1,5 @@
 const Job = require("../models/jobModel");
-
+// create job
 const createJob = async (req, res) => {
   try {
     const { title, company, description, location, salary, skills } = req.body;
@@ -24,7 +24,7 @@ const createJob = async (req, res) => {
     });
   }
 };
-
+//get job
 const getJobs = async (req, res) => {
   try {
     const jobs = await Job.find();
@@ -40,8 +40,30 @@ const getJobs = async (req, res) => {
     });
   }
 };
+//get job by id
+const getJobById = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Job fetched successfully",
+      job,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch job",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createJob,
-  getJobs,
+  getJobs,getJobById
 };
