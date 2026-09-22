@@ -1,4 +1,29 @@
+
+import { useState } from "react";
+import axios from "axios";
 function Register() {
+  const handleRegister = async (e) => {
+  e.preventDefault();
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    console.log("Register data:", {
+      name,
+      email,
+      password,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+  const [name, setName] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
 
@@ -12,7 +37,7 @@ function Register() {
           Create your JobConnect account
         </p>
 
-        <form>
+        <form onSubmit={handleRegister}>
 
           {/* Name */}
           <div className="mb-5">
@@ -22,6 +47,8 @@ function Register() {
 
             <input
               type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
               className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -35,6 +62,8 @@ function Register() {
 
             <input
               type="email"
+               value={email}
+            onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -48,6 +77,9 @@ function Register() {
 
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+
               placeholder="Create a password"
               className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -61,6 +93,8 @@ function Register() {
 
             <input
               type="password"
+               value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your password"
               className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />

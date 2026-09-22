@@ -1,13 +1,15 @@
 
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
  const handleLogin = async (e) => {
+  
   e.preventDefault();
 
   try {
@@ -17,6 +19,9 @@ function Login() {
     });
 
     console.log("Backend Response:", response.data);
+    localStorage.setItem("token", response.data.token);
+    console.log("Login successful, going to Home...");
+navigate("/");
   } catch (error) {
     console.log("Login Error:", error.response?.data || error.message);
   }
