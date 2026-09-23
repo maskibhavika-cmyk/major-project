@@ -1,56 +1,80 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-[#030712] border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
+        {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold text-blue-600"
+          className="text-2xl font-bold text-blue-500"
         >
           JobConnect
         </Link>
 
+        {/* Navigation */}
         <div className="flex items-center gap-8">
 
-          <Link
-            to="/"
-            className="text-gray-700 font-medium hover:text-blue-600 transition"
-          >
-            Home
-          </Link>
+          <NavLink
+  to="/"
+  className={({ isActive }) =>
+    `font-medium transition ${
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-white"
+    }`
+  }
+>
+  Home
+</NavLink>
 
-          <Link
-            to="/jobs"
-            className="text-gray-700 font-medium hover:text-blue-600 transition"
-          >
-            Jobs
-          </Link>
+          <NavLink
+  to="/jobs"
+  className={({ isActive }) =>
+    `font-medium transition ${
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-white"
+    }`
+  }
+>
+  Jobs
+</NavLink>
 
-          <Link
-            to="/login"
-            className="text-gray-700 font-medium hover:text-blue-600 transition"
-          >
-            Login
-          </Link>
+          <NavLink
+  to="/login"
+  className={({ isActive }) =>
+    `font-medium transition ${
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-white"
+    }`
+  }
+>
+  Login
+</NavLink>
 
-          <Link
-            to="/register"
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition"
-          >
-            Register
-          </Link>
-
+          <NavLink
+  to="/register"
+  className={({ isActive }) =>
+    `px-5 py-2 rounded-lg font-medium transition ${
+      isActive
+        ? "bg-blue-700 text-white"
+        : "bg-blue-600 text-white hover:bg-blue-700"
+    }`
+  }
+>
+  Register
+</NavLink>
           <Link
             to="/profile"
-            className="text-gray-700 font-medium hover:text-blue-600 transition"
+            className="text-gray-300 font-medium hover:text-white transition"
           >
             Profile
           </Link>
 
         </div>
-
       </div>
     </nav>
   );

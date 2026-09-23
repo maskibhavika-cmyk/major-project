@@ -22,6 +22,30 @@ function JobDetails() {
 
     fetchJob();
   }, [id]);
+    const handleApply = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/applications",
+        {
+          jobId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert(response.data.message);
+    } catch (error) {
+      console.log(
+        "Apply Error:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   if (!job) {
     return <p>Loading...</p>;
@@ -50,6 +74,12 @@ function JobDetails() {
         <p className="text-gray-700 mt-5">
           {job.description}
         </p>
+        <button
+  onClick={handleApply}
+  className="mt-6 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
+>
+  Apply Now
+</button>
 
       </div>
     </div>
