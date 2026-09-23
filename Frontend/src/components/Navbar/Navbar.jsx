@@ -73,6 +73,18 @@ function Navbar() {
           >
             Profile
           </Link>
+          <NavLink
+  to="/saved-jobs"
+  className={({ isActive }) =>
+    `font-medium transition ${
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-white"
+    }`
+  }
+>
+  Saved Jobs
+</NavLink>
 
         </div>
       </div>

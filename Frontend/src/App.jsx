@@ -5,7 +5,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar/Navbar";
-
+import SavedJobs from "./pages/savedJobs";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import Profile from "./pages/Profile";
 function App() {
   return (
     <>
@@ -17,6 +19,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/saved-jobs" element={<SavedJobs />} />
+        <Route element={<ProtectedRoute />}>
+        <Route path="/profile" element={<Profile />} />
+         </Route>
       </Routes>
     </>
   );
