@@ -8,6 +8,10 @@ import Navbar from "./components/Navbar/Navbar";
 import SavedJobs from "./pages/savedJobs";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Profile from "./pages/Profile";
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+import PostJob from "./pages/PostJob";
+import MyJobs from "./pages/MyJobs";
+import EditJob from "./pages/EditJob";
 function App() {
   return (
     <>
@@ -23,6 +27,23 @@ function App() {
         <Route element={<ProtectedRoute />}>
         <Route path="/profile" element={<Profile />} />
          </Route>
+         <Route
+          path="/recruiter/dashboard"
+         element={<RecruiterDashboard />}
+
+/>
+<Route
+  path="/recruiter/my-jobs"
+  element={<MyJobs />}
+/>
+<Route
+  path="/recruiter/post-job"
+  element={<PostJob />}
+/>
+<Route
+  path="/recruiter/edit-job/:id"
+  element={<EditJob />}
+/>
       </Routes>
     </>
   );

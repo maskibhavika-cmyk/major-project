@@ -63,8 +63,55 @@ const getJobById = async (req, res) => {
     });
   }
 };
+const updateJob = async (req, res) => {
+  try {
+    const job = await Job.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Job updated successfully",
+      job,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update job",
+      error: error.message,
+    });
+  }
+};
+
+const deleteJob = async (req, res) => {
+  try {
+    const job = await Job.findByIdAndDelete(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Job deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete job",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createJob,
-  getJobs,getJobById
+  getJobs,getJobById,updateJob,
+  deleteJob
 };
