@@ -5,6 +5,8 @@ import axios from "axios";
 function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
+  const [location, setLocation] = useState("");
+  const [jobType, setJobType] = useState("");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -25,13 +27,19 @@ function Jobs() {
 
   // Search jobs by title or company
   const filteredJobs = jobs.filter((job) => {
-    const searchText = search.toLowerCase().trim();
+  const searchText = search.toLowerCase().trim();
+  const locationText = location.toLowerCase().trim();
+  const jobTypeText = jobType.toLowerCase().trim();
 
-    return (
-      job.title?.toLowerCase().includes(searchText) ||
-      job.company?.toLowerCase().includes(searchText)
-    );
-  });
+  const matchesSearch =
+    job.title?.toLowerCase().includes(searchText) ||
+    job.company?.toLowerCase().includes(searchText);
+
+  const matchesLocation =
+    job.location?.toLowerCase().includes(locationText);
+
+  return matchesSearch && matchesLocation && matchesJobType;
+});
 
   return (
     <div className="min-h-screen bg-[#030712] text-white py-12 px-6">
@@ -62,6 +70,24 @@ function Jobs() {
             placeholder="Search by job title or company..."
             className="w-full bg-[#111827] border border-gray-800 text-white placeholder-gray-500 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
           />
+          <input
+  type="text"
+  value={location}
+  onChange={(e) => setLocation(e.target.value)}
+  placeholder="Search by location..."
+  className="w-full mt-3 bg-[#111827] border border-gray-800 text-white placeholder-gray-500 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
+/>
+<select
+  value={jobType}
+  onChange={(e) => setJobType(e.target.value)}
+  className="w-full mt-3 bg-[#111827] border border-gray-800 text-gray-300 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
+>
+  <option value="">All Job Types</option>
+  <option value="Full Time">Full Time</option>
+  <option value="Part Time">Part Time</option>
+  <option value="Internship">Internship</option>
+  <option value="Contract">Contract</option>
+</select>
         </div>
 
         {/* Result Count */}
