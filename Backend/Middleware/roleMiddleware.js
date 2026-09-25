@@ -1,14 +1,8 @@
-const roleMiddleware = (...allowedRoles) => {
+const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({
-        message: "User not authenticated",
-      });
-    }
-
-    if (!allowedRoles.includes(req.user.role)) {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
       return res.status(403).json({
-        message: "Access denied",
+        message: "Access denied. You do not have permission.",
       });
     }
 
@@ -16,4 +10,4 @@ const roleMiddleware = (...allowedRoles) => {
   };
 };
 
-module.exports = roleMiddleware;
+module.exports = authorizeRoles;

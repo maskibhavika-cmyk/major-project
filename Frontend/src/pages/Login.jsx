@@ -20,7 +20,9 @@ function Login() {
 
     console.log("Backend Response:", response.data);
     localStorage.setItem("token", response.data.token);
-    console.log("Login successful, going to Home...");
+localStorage.setItem("user", JSON.stringify(response.data.user));
+
+console.log("Login successful, going to Home...");
 navigate("/");
   } catch (error) {
     console.log("Login Error:", error.response?.data || error.message);

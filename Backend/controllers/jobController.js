@@ -2,7 +2,15 @@ const Job = require("../models/jobModel");
 // create job
 const createJob = async (req, res) => {
   try {
-    const { title, company, description, location, salary, jobType,skills } = req.body;
+    const {
+      title,
+      company,
+      description,
+      location,
+      salary,
+      jobType,
+      skills,
+    } = req.body;
 
     const job = await Job.create({
       title,
@@ -11,7 +19,8 @@ const createJob = async (req, res) => {
       location,
       salary,
       jobType,
-      skills
+      skills,
+      recruiter: req.user.id,
     });
 
     res.status(201).json({
@@ -41,6 +50,48 @@ const getJobs = async (req, res) => {
     });
   }
 };
+// Get jobs posted by logged-in recruiter
+const getMyJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({
+      recruiter: req.user.id,
+    });
+
+    res.status(200).json({
+      message: "Your jobs fetched successfully",
+      jobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch your jobs",
+      error: error.message,
+    });
+  }
+};
+const getMyJobById = async (req, res) => {
+  try {
+    const job = await Job.findOne({
+      _id: req.params.id,
+      recruiter: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found or you are not authorized",
+      });
+    }
+
+    res.status(200).json({
+      message: "Your job fetched successfully",
+      job,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch job",
+      error: error.message,
+    });
+  }
+};
 //get job by id
 const getJobById = async (req, res) => {
   try {
@@ -65,15 +116,26 @@ const getJobById = async (req, res) => {
 };
 const updateJob = async (req, res) => {
   try {
-    const job = await Job.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+    const job = await Job.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        recruiter: req.user.id,
+      },
+      {
+  title: req.body.title,
+  company: req.body.company,
+  description: req.body.description,
+  location: req.body.location,
+  salary: req.body.salary,
+  jobType: req.body.jobType,
+  skills: req.body.skills,
+},
       { new: true, runValidators: true }
     );
 
     if (!job) {
       return res.status(404).json({
-        message: "Job not found",
+        message: "Job not found or you are not allowed to edit it",
       });
     }
 
@@ -88,14 +150,16 @@ const updateJob = async (req, res) => {
     });
   }
 };
-
 const deleteJob = async (req, res) => {
   try {
-    const job = await Job.findByIdAndDelete(req.params.id);
+    const job = await Job.findOneAndDelete({
+      _id: req.params.id,
+      recruiter: req.user.id,
+    });
 
     if (!job) {
       return res.status(404).json({
-        message: "Job not found",
+        message: "Job not found or you are not allowed to delete it",
       });
     }
 
@@ -112,6 +176,6 @@ const deleteJob = async (req, res) => {
 
 module.exports = {
   createJob,
-  getJobs,getJobById,updateJob,
+  getJobs,  getMyJobs, getMyJobById,getJobById,updateJob,
   deleteJob
 };

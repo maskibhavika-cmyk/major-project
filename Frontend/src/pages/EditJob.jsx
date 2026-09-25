@@ -19,9 +19,16 @@ function EditJob() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/v1/jobs/${id}`
-        );
+        const token = localStorage.getItem("token");
+
+const response = await axios.get(
+  `http://localhost:8080/api/v1/jobs/my-jobs/${id}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
         const data = response.data.job;
 
@@ -56,16 +63,28 @@ function EditJob() {
     e.preventDefault();
 
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/v1/jobs/${id}`,
-        {
-          ...job,
-          skills: job.skills
-            .split(",")
-            .map((skill) => skill.trim())
-            .filter((skill) => skill !== ""),
-        }
-      );
+     const token = localStorage.getItem("token");
+
+const response = await axios.put(
+  `http://localhost:8080/api/v1/jobs/${id}`,
+  {
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    salary: job.salary,
+    jobType: job.jobType,
+    description: job.description,
+    skills: job.skills
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill !== ""),
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
       console.log("Updated Job:", response.data);
 

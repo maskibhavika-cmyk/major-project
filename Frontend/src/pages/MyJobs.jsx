@@ -4,25 +4,31 @@ import axios from "axios";
 function MyJobs() {
   const [jobs, setJobs] = useState([]);
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/v1/jobs"
-        );
+ useEffect(() => {
+  const fetchJobs = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-        setJobs(response.data.jobs);
-      } catch (error) {
-        console.log(
-          "My Jobs Error:",
-          error.response?.data || error.message
-        );
-      }
-    };
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/jobs/my-jobs",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    fetchJobs();
-  }, []);
+      setJobs(response.data.jobs);
+    } catch (error) {
+      console.log(
+        "My Jobs Error:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
+  fetchJobs();
+}, []);
   // Delete Job
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
@@ -31,23 +37,32 @@ function MyJobs() {
 
     if (!confirmDelete) return;
 
-    try {
-      await axios.delete(
-        `http://localhost:8080/api/v1/jobs/${id}`
-      );
+   try {
+  const token = localStorage.getItem("token");
 
-      setJobs(jobs.filter((job) => job._id !== id));
-
-      alert("Job deleted successfully");
-    } catch (error) {
-      console.log(
-        "Delete Job Error:",
-        error.response?.data || error.message
-      );
-
-      alert("Failed to delete job");
+  await axios.delete(
+    `http://localhost:8080/api/v1/jobs/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
-  };
+  );
+
+  setJobs((previousJobs) =>
+    previousJobs.filter((job) => job._id !== id)
+  );
+
+  alert("Job deleted successfully");
+} catch (error) {
+  console.log(
+    "Delete Job Error:",
+    error.response?.data || error.message
+  );
+
+  alert("Failed to delete job");
+}
+  }
 
   return (
     <div className="min-h-screen bg-[#030712] text-white py-12 px-6">
@@ -94,24 +109,33 @@ function MyJobs() {
                 <p className="text-gray-400 mt-1">
                    {job.jobType}
                 </p>
+{/* Buttons */}
+<div className="flex flex-wrap gap-3 mt-5">
 
-                {/* Buttons */}
-                <div className="flex gap-3 mt-5">
-                 <button
-  onClick={() =>
-    (window.location.href = `/recruiter/edit-job/${job._id}`)
-  }
-  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
->
-  Edit
-</button>
+  <button
+    onClick={() =>
+      (window.location.href = `/recruiter/applicants/${job._id}`)
+    }
+    className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg"
+  >
+    View Applicants
+  </button>
 
-                  <button
-                    onClick={() => handleDelete(job._id)}
-                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                  >
-                    Delete
-                  </button>
+  <button
+    onClick={() =>
+      (window.location.href = `/recruiter/edit-job/${job._id}`)
+    }
+    className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+  >
+    Edit
+  </button>
+
+  <button
+    onClick={() => handleDelete(job._id)}
+    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+  >
+    Delete
+  </button>
                 </div>
               </div>
             ))}
