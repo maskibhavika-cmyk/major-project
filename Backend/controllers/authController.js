@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, phone, role } = req.body;
+    // 
+    const { name, email, password, phone } = req.body;
 
     // Check required fields
     if (!name || !email || !password) {
@@ -29,7 +30,7 @@ const user = await User.create({
   email,
   password: hashedPassword,
   phone,
-  role
+  role: "student",
 });
     res.status(201).json({
   message: "User registered successfully",
@@ -121,7 +122,56 @@ const getUser = async (req, res) => {
     });
   }
 };
+const updateUserBlockStatus = async (req, res) => {
+  try {
+    const { isBlocked } = req.body;
 
+    if (typeof isBlocked !== "boolean") {
+      return res.status(400).json({
+        message: "isBlocked must be true or false",
+      });
+    }
+
+    if (req.params.id === req.user.id) {
+      return res.status(400).json({
+        message: "Admin cannot block their own account",
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (user.role === "admin") {
+      return res.status(403).json({
+        message: "Cannot block another admin",
+      });
+    }
+
+    user.isBlocked = isBlocked;
+    await user.save();
+
+    res.status(200).json({
+      message: isBlocked
+        ? "User blocked successfully"
+        : "User unblocked successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isBlocked: user.isBlocked,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update user status",
+    });
+  }
+};
 module.exports = {
-  registerUser,loginUser, getUser
+  registerUser,loginUser, getUser, updateUserBlockStatus
 };

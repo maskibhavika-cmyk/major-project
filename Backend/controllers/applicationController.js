@@ -1,8 +1,32 @@
-const Application = require("../models/applicationModel");
 
+const Application = require("../models/applicationModel");
+const Job = require("../models/jobModel");
 const applyJob = async (req, res) => {
   try {
     const { jobId } = req.body;
+    if (!jobId) {
+  return res.status(400).json({
+    message: "Job ID is required",
+  });
+}
+
+const job = await Job.findById(jobId);
+
+if (!job) {
+  return res.status(404).json({
+    message: "Job not found",
+  });
+}
+    const existingApplication = await Application.findOne({
+  job: jobId,
+  user: req.user.id,
+});
+
+if (existingApplication) {
+  return res.status(400).json({
+    message: "You have already applied for this job",
+  });
+}
 
     const application = await Application.create({
       job: jobId,
@@ -20,9 +44,20 @@ const applyJob = async (req, res) => {
     });
   }
 };
-
 const getApplicantsByJob = async (req, res) => {
   try {
+    // Check whether this job belongs to logged-in recruiter
+    const job = await Job.findOne({
+      _id: req.params.jobId,
+      recruiter: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(403).json({
+        message: "You are not allowed to view these applicants",
+      });
+    }
+
     const applications = await Application.find({
       job: req.params.jobId,
     })
@@ -40,20 +75,45 @@ const getApplicantsByJob = async (req, res) => {
     });
   }
 };
-
 const updateApplicationStatus = async (req, res) => {
   try {
-    const application = await Application.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      { new: true, runValidators: true }
-    );
+    const { status } = req.body;
+
+    const allowedStatuses = [
+      "Applied",
+      "Shortlisted",
+      "Interview",
+      "Selected",
+      "Rejected",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid application status",
+      });
+    }
+
+    const application = await Application.findById(req.params.id);
 
     if (!application) {
       return res.status(404).json({
         message: "Application not found",
       });
     }
+
+    const job = await Job.findOne({
+      _id: application.job,
+      recruiter: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(403).json({
+        message: "You are not allowed to update this application",
+      });
+    }
+
+    application.status = status;
+    await application.save();
 
     res.status(200).json({
       message: "Application status updated successfully",
@@ -66,6 +126,7 @@ const updateApplicationStatus = async (req, res) => {
     });
   }
 };
+
 const getMyApplications = async (req, res) => {
   try {
     console.log("Logged in user:", req.user);
