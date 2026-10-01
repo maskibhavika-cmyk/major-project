@@ -7,6 +7,7 @@ function PostJob() {
     location: "",
     salary: "",
     jobType: "Full Time",
+    experience: "0-1",
     description: "",
     skills: "",
   });
@@ -42,6 +43,7 @@ function PostJob() {
       location: "",
       salary: "",
       jobType: "Full Time",
+      experience: "0-1",
       description: "",
       skills: "",
     });
@@ -152,6 +154,23 @@ function PostJob() {
                 <option>Contract</option>
               </select>
             </div>
+            <div>
+  <label className="block text-gray-400 mb-2">
+    Experience
+  </label>
+
+  <select
+    name="experience"
+    value={job.experience}
+    onChange={handleChange}
+    className="w-full bg-[#030712] border border-gray-700 rounded-lg px-4 py-3 outline-none"
+  >
+    <option value="0-1">0-1 Years</option>
+    <option value="1-3">1-3 Years</option>
+    <option value="3-5">3-5 Years</option>
+    <option value="5+">5+ Years</option>
+  </select>
+</div>
 
             <div>
               <label className="block text-gray-400 mb-2">

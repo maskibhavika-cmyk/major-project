@@ -31,6 +31,10 @@ const jobSchema = new mongoose.Schema(
       enum: ["Full Time", "Part Time", "Internship", "Contract"],
       default: "Full Time",
     },
+    experience: {
+  type: String,
+  default: "0-1",
+},
 
     skills: {
       type: [String],

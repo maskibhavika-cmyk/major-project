@@ -1,6 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Navbar() {
+    const location = useLocation();
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user") || "null")
+  );
+
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("user") || "null"));
+  }, [location]);
   return (
     <nav className="bg-[#030712] border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -85,6 +94,20 @@ function Navbar() {
 >
   Saved Jobs
 </NavLink>
+          {user?.role === "admin" && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `font-medium transition ${
+                  isActive
+                    ? "text-blue-500"
+                    : "text-gray-300 hover:text-white"
+                }`
+              }
+            >
+              Admin Dashboard
+            </NavLink>
+          )}
 
         </div>
       </div>

@@ -12,9 +12,8 @@ router.post("/register", registerUser);
 
 router.post("/login", loginUser);
 
-// router.get("/users", getUser);
-
 router.get("/users", authMiddleware, getUser);
+
 router.patch( "/users/:id/block",authMiddleware, roleMiddleware("admin"), updateUserBlockStatus);
   
   

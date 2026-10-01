@@ -47,7 +47,7 @@ router.put(
 router.delete(
   "/:id",
   authMiddleware,
-  authorizeRoles("recruiter"),
+  authorizeRoles("recruiter", "admin"),
   deleteJob
 );
 

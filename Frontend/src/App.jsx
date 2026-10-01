@@ -16,6 +16,7 @@ import EditJob from "./pages/EditJob";
 import Applicants from "./pages/Applicants";
 import MyApplications from "./pages/MyApplications";
 import Unauthorized from "./pages/Unauthorized";
+import AdminDashboard from "./pages/AdminDashboard";
 function App() {
   return (
     <>
@@ -47,6 +48,10 @@ function App() {
           <Route path="/recruiter/applicants/:jobId" element={<Applicants />} />
         </Route>
         <Route path="/unauthorized" element={<Unauthorized />} />
+        {/* Admin route */}
+<Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+  <Route path="/admin" element={<AdminDashboard />} />
+</Route>
       </Routes>
     </>
   );

@@ -25,11 +25,11 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
-      req.user.id,
-      req.body,
+      req.user.id,// user id
+      req.body,//updated id
       {
-        new: true,
-        runValidators: true,
+        new: true,// update data ke liye
+        runValidators: true,//Update ke time schema ke validators run karta hai.
       }
     ).select("-password");
 
@@ -50,6 +50,4 @@ const updateProfile = async (req, res) => {
     });
   }
 };
-module.exports = {
-  getProfile,updateProfile
-};
+module.exports = {  getProfile,updateProfile};

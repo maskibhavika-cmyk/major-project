@@ -10,13 +10,13 @@ const authMiddleware = (req, res, next) => {
       });
     }
 
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1];//string ko space ke basis par divide karta hai
 
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET
     );
-
+//User data request mein store karna
     req.user = decoded;
 
     next();

@@ -2,15 +2,9 @@ const Job = require("../models/jobModel");
 // create job
 const createJob = async (req, res) => {
   try {
-    const {
-      title,
-      company,
-      description,
-      location,
-      salary,
-      jobType,
-      skills,
-    } = req.body;
+    const {  title, company, description,location, salary,jobType,skills,  } = req.body;
+
+    
 
     const job = await Job.create({
       title,
@@ -20,7 +14,7 @@ const createJob = async (req, res) => {
       salary,
       jobType,
       skills,
-      recruiter: req.user.id,
+      recruiter: req.user.id,//job ke saath logged-in recruiter ki ID bhi save hogi
     });
 
     res.status(201).json({
@@ -118,8 +112,8 @@ const updateJob = async (req, res) => {
   try {
     const job = await Job.findOneAndUpdate(
       {
-        _id: req.params.id,
-        recruiter: req.user.id,
+        _id: req.params.id,//URL se job ki ID milti hai
+        recruiter: req.user.id,//job ke saath logged-in recruiter ki ID bhi save hogi
       },
       {
   title: req.body.title,
@@ -152,10 +146,16 @@ const updateJob = async (req, res) => {
 };
 const deleteJob = async (req, res) => {
   try {
-    const job = await Job.findOneAndDelete({
-      _id: req.params.id,
-      recruiter: req.user.id,
-    });
+    let job;
+
+    if (req.user.role === "admin") {
+      job = await Job.findByIdAndDelete(req.params.id);
+    } else {
+      job = await Job.findOneAndDelete({
+        _id: req.params.id,
+        recruiter: req.user.id,
+      });
+    }
 
     if (!job) {
       return res.status(404).json({
@@ -174,8 +174,5 @@ const deleteJob = async (req, res) => {
   }
 };
 
-module.exports = {
-  createJob,
-  getJobs,  getMyJobs, getMyJobById,getJobById,updateJob,
-  deleteJob
-};
+module.exports = { createJob,getJobs,  getMyJobs, getMyJobById,getJobById,updateJob, deleteJob};
+ 

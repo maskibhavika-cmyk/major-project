@@ -152,6 +152,5 @@ const getMyApplications = async (req, res) => {
     });
   }
 };
-module.exports = {
-  applyJob, getApplicantsByJob, updateApplicationStatus, getMyApplications
-};
+module.exports = { applyJob, getApplicantsByJob, updateApplicationStatus, getMyApplications};
+  

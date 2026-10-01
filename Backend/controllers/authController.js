@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const registerUser = async (req, res) => {
   try {
-    // 
+    // frontend se data lena
     const { name, email, password, phone } = req.body;
 
     // Check required fields
@@ -77,7 +77,12 @@ const loginUser = async (req, res) => {
         message: "Invalid email or password",
       });
     }
-
+    if (user.isBlocked) {
+  return res.status(403).json({
+    message: "Your account has been blocked. Please contact admin.",
+  });
+}
+// token generate
     const token = jwt.sign(
   {
     id: user._id,
@@ -138,7 +143,7 @@ const updateUserBlockStatus = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id);//URL se aayi hui ID ke basis par database mein user ko find karna.
 
     if (!user) {
       return res.status(404).json({
@@ -172,6 +177,5 @@ const updateUserBlockStatus = async (req, res) => {
     });
   }
 };
-module.exports = {
-  registerUser,loginUser, getUser, updateUserBlockStatus
-};
+module.exports = {registerUser,loginUser, getUser, updateUserBlockStatus};
+  
