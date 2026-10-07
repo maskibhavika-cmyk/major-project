@@ -12,6 +12,9 @@ function Profile() {
     about: "",
   });
 
+  const [resume, setResume] = useState(null);
+  const [resumePath, setResumePath] = useState("");
+
   // Get profile
   useEffect(() => {
     const fetchProfile = async () => {
@@ -38,6 +41,8 @@ function Profile() {
           skills: user.skills || "",
           about: user.about || "",
         });
+
+        setResumePath(user.resume || "");
       } catch (error) {
         console.log(
           "Profile Error:",
@@ -76,7 +81,6 @@ function Profile() {
         about: user.about || "",
       });
 
-      // Update localStorage user also
       localStorage.setItem("user", JSON.stringify(user));
 
       alert("Profile updated successfully");
@@ -89,6 +93,50 @@ function Profile() {
       alert(
         error.response?.data?.message ||
           "Failed to update profile"
+      );
+    }
+  };
+
+  // Upload Resume
+  const handleResumeUpload = async () => {
+    if (!resume) {
+      alert("Please select a resume first");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("resume", resume);
+
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/users/profile/resume",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setResumePath(response.data.user.resume);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+
+      alert("Resume uploaded successfully");
+    } catch (error) {
+      console.log(
+        "Resume Upload Error:",
+        error.response?.data || error.message
+      );
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to upload resume"
       );
     }
   };
@@ -255,13 +303,48 @@ function Profile() {
             />
           </div>
 
-          {/* Save */}
+          {/* Save Profile */}
           <button
             onClick={handleSaveProfile}
             className="mt-6 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium"
           >
             Save Profile
           </button>
+
+          {/* Resume */}
+          <div className="mt-8 border-t border-gray-700 pt-6">
+
+            <h2 className="text-xl font-semibold mb-4">
+              Resume
+            </h2>
+
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => setResume(e.target.files[0])}
+              className="block w-full text-gray-300"
+            />
+
+            {resume && (
+              <p className="text-gray-400 mt-3">
+                Selected: {resume.name}
+              </p>
+            )}
+
+            <button
+              onClick={handleResumeUpload}
+              className="mt-4 bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium"
+            >
+              Upload Resume
+            </button>
+
+            {resumePath && (
+              <p className="text-green-400 mt-4">
+                Resume uploaded successfully.
+              </p>
+            )}
+
+          </div>
 
         </div>
       </div>

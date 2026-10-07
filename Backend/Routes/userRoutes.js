@@ -1,12 +1,58 @@
 const express = require("express");
+const multer = require("multer");
 
-const { getProfile, updateProfile } = require("../controllers/userController");
+const User = require("../models/userModel");
+const {
+  getProfile,
+  updateProfile,
+} = require("../controllers/userController");
 
 const authMiddleware = require("../Middleware/authMiddleware");
 
+const upload = multer({ dest: "uploads/" });
+
 const router = express.Router();
 
+// Get Profile
 router.get("/profile", authMiddleware, getProfile);
+
+// Update Profile
 router.patch("/profile", authMiddleware, updateProfile);
+
+// Upload Resume
+router.post(
+  "/profile/resume",
+  authMiddleware,
+  upload.single("resume"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          message: "Resume file is required",
+        });
+      }
+
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          resume: req.file.path,
+        },
+        {
+          new: true,
+        }
+      ).select("-password");
+
+      res.status(200).json({
+        message: "Resume uploaded successfully",
+        user,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Failed to upload resume",
+        error: error.message,
+      });
+    }
+  }
+);
 
 module.exports = router;
