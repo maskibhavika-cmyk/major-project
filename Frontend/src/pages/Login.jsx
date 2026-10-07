@@ -23,15 +23,21 @@ function Login() {
 localStorage.setItem("user", JSON.stringify(response.data.user));
 
 console.log("Login successful, going to Home...");
-navigate("/");
+if (response.data.user.role === "recruiter") {
+  navigate("/recruiter/dashboard");
+} else if (response.data.user.role === "admin") {
+  navigate("/admin");
+} else {
+  navigate("/");
+}
   } catch (error) {
     console.log("Login Error:", error.response?.data || error.message);
   }
 };
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+  <div className="min-h-screen bg-[#030712] flex items-center justify-center px-4">
       
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-md">
+    <div className="w-full max-w-md bg-[#111827] p-8 rounded-xl shadow-md">
 
         <h1 className="text-3xl font-bold text-gray-800 text-center mb-2">
           Welcome Back

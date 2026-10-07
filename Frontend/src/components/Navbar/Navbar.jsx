@@ -94,6 +94,35 @@ function Navbar() {
 >
   Saved Jobs
 </NavLink>
+{user?.role === "recruiter" && (
+  <>
+    <NavLink
+      to="/recruiter/dashboard"
+      className={({ isActive }) =>
+        `font-medium transition ${
+          isActive
+            ? "text-blue-500"
+            : "text-gray-300 hover:text-white"
+        }`
+      }
+    >
+      Recruiter Dashboard
+    </NavLink>
+
+    <NavLink
+      to="/recruiter/my-jobs"
+      className={({ isActive }) =>
+        `font-medium transition ${
+          isActive
+            ? "text-blue-500"
+            : "text-gray-300 hover:text-white"
+        }`
+      }
+    >
+      My Jobs
+    </NavLink>
+  </>
+)}
           {user?.role === "admin" && (
             <NavLink
               to="/admin"
