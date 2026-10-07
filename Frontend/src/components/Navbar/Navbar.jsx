@@ -94,6 +94,7 @@ function Navbar() {
 >
   Saved Jobs
 </NavLink>
+
 <NavLink
   to="/my-applications"
   className={({ isActive }) =>
@@ -105,6 +106,18 @@ function Navbar() {
   }
 >
   My Applications
+</NavLink>
+<NavLink
+  to="/notifications"
+  className={({ isActive }) =>
+    `font-medium transition ${
+      isActive
+        ? "text-blue-500"
+        : "text-gray-300 hover:text-white"
+    }`
+  }
+>
+  Notifications
 </NavLink>
 {user?.role === "recruiter" && (
   <>

@@ -17,6 +17,7 @@ import Applicants from "./pages/Applicants";
 import MyApplications from "./pages/MyApplications";
 import Unauthorized from "./pages/Unauthorized";
 import AdminDashboard from "./pages/AdminDashboard";
+import Notifications from "./pages/notification";
 function App() {
   return (
     <>
@@ -29,7 +30,7 @@ function App() {
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
         <Route path="/saved-jobs" element={<SavedJobs />} />
-
+        <Route path="/notifications" element={<Notifications />} />
         {/* Student and logged-in user routes */}
         <Route element={<ProtectedRoute allowedRoles={["student", "recruiter", "admin"]} />}>
           <Route path="/profile" element={<Profile />} />
