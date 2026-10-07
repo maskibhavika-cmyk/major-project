@@ -10,6 +10,8 @@ function Jobs() {
   const [sortBy, setSortBy] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [experience, setExperience] = useState("");
+  const [salary, setSalary] = useState("");
+
   const jobsPerPage = 3;
 
   // Fetch jobs
@@ -32,19 +34,21 @@ function Jobs() {
 
   // Filter/sort change hone par Page 1 par aayega
   useEffect(() => {
-  setCurrentPage(1);
-}, [search, location, jobType, sortBy, experience]);
+    setCurrentPage(1);
+  }, [search, location, jobType, sortBy, experience, salary]);
+
   // Search + Filter
   const filteredJobs = jobs.filter((job) => {
     const searchText = search.toLowerCase().trim();
     const locationText = location.toLowerCase().trim();
     const jobTypeText = jobType.toLowerCase().trim();
-const matchesSearch =
-  job.title?.toLowerCase().includes(searchText) ||
-  job.company?.toLowerCase().includes(searchText) ||
-  job.skills?.some((skill) =>
-    skill.toLowerCase().includes(searchText)
-  );
+
+    const matchesSearch =
+      job.title?.toLowerCase().includes(searchText) ||
+      job.company?.toLowerCase().includes(searchText) ||
+      job.skills?.some((skill) =>
+        skill.toLowerCase().includes(searchText)
+      );
 
     const matchesLocation =
       job.location?.toLowerCase().includes(locationText);
@@ -52,10 +56,39 @@ const matchesSearch =
     const matchesJobType =
       !jobTypeText ||
       job.jobType?.toLowerCase() === jobTypeText;
-const matchesExperience =
-  !experience ||
-  job.experience?.toLowerCase().includes(experience.toLowerCase());
-    return matchesSearch && matchesLocation && matchesJobType;
+
+    const matchesExperience =
+      !experience ||
+      job.experience?.toLowerCase().includes(experience.toLowerCase());
+
+    // Salary Filter
+    const salaryValue = parseFloat(job.salary);
+
+    let matchesSalary = true;
+
+    if (salary === "under5") {
+      matchesSalary = salaryValue < 5;
+    }
+
+    if (salary === "5-10") {
+      matchesSalary = salaryValue >= 5 && salaryValue <= 10;
+    }
+
+    if (salary === "10-15") {
+      matchesSalary = salaryValue > 10 && salaryValue <= 15;
+    }
+
+    if (salary === "15plus") {
+      matchesSalary = salaryValue > 15;
+    }
+
+    return (
+      matchesSearch &&
+      matchesLocation &&
+      matchesJobType &&
+      matchesExperience &&
+      matchesSalary
+    );
   });
 
   // Sorting
@@ -144,17 +177,32 @@ const matchesExperience =
             <option value="Internship">Internship</option>
             <option value="Contract">Contract</option>
           </select>
+
+          {/* Experience */}
           <select
-  value={experience}
-  onChange={(e) => setExperience(e.target.value)}
-  className="w-full mt-3 bg-[#111827] border border-gray-800 text-gray-300 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
->
-  <option value="">All Experience</option>
-  <option value="0-1">0-1 Years</option>
-  <option value="1-3">1-3 Years</option>
-  <option value="3-5">3-5 Years</option>
-  <option value="5+">5+ Years</option>
-</select>
+            value={experience}
+            onChange={(e) => setExperience(e.target.value)}
+            className="w-full mt-3 bg-[#111827] border border-gray-800 text-gray-300 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
+          >
+            <option value="">All Experience</option>
+            <option value="0-1">0-1 Years</option>
+            <option value="1-3">1-3 Years</option>
+            <option value="3-5">3-5 Years</option>
+            <option value="5+">5+ Years</option>
+          </select>
+
+          {/* Salary Filter */}
+          <select
+            value={salary}
+            onChange={(e) => setSalary(e.target.value)}
+            className="w-full mt-3 bg-[#111827] border border-gray-800 text-gray-300 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
+          >
+            <option value="">All Salaries</option>
+            <option value="under5">Under 5 LPA</option>
+            <option value="5-10">5 - 10 LPA</option>
+            <option value="10-15">10 - 15 LPA</option>
+            <option value="15plus">15+ LPA</option>
+          </select>
 
           {/* Sorting */}
           <select
@@ -172,7 +220,6 @@ const matchesExperience =
               Salary: High to Low
             </option>
           </select>
-
         </div>
 
         {/* Result Count */}
@@ -199,10 +246,10 @@ const matchesExperience =
                 </p>
 
                 <div className="mt-4 space-y-2 text-gray-400">
-                  <p> {job.location}</p>
+                  <p>{job.location}</p>
 
                   <p>
-                     {job.salary || "Salary not specified"}
+                    {job.salary || "Salary not specified"}
                   </p>
 
                   <p>
