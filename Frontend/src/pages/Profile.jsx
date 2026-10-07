@@ -10,6 +10,10 @@ function Profile() {
     linkedin: "",
     skills: "",
     about: "",
+    education: "",
+    experience: "",
+    projects: "",
+    portfolio: "",
   });
 
   const [resume, setResume] = useState(null);
@@ -40,6 +44,10 @@ function Profile() {
           linkedin: user.linkedin || "",
           skills: user.skills || "",
           about: user.about || "",
+          education: user.education || "",
+          experience: user.experience || "",
+          projects: user.projects || "",
+          portfolio: user.portfolio || "",
         });
 
         setResumePath(user.resume || "");
@@ -79,6 +87,10 @@ function Profile() {
         linkedin: user.linkedin || "",
         skills: user.skills || "",
         about: user.about || "",
+        education: user.education || "",
+        experience: user.experience || "",
+        projects: user.projects || "",
+        portfolio: user.portfolio || "",
       });
 
       localStorage.setItem("user", JSON.stringify(user));
@@ -98,6 +110,27 @@ function Profile() {
   };
 
   // Upload Resume
+  const fields = [
+  profile.name,
+  profile.phone,
+  profile.about,
+  profile.skills,
+  profile.github,
+  profile.linkedin,
+  profile.education,
+  profile.experience,
+  profile.projects,
+  profile.portfolio,
+  resumePath,
+];
+
+const completedFields = fields.filter(
+  (field) => field && field.toString().trim() !== ""
+).length;
+
+const profileCompletion = Math.round(
+  (completedFields / fields.length) * 100
+);
   const handleResumeUpload = async () => {
     if (!resume) {
       alert("Please select a resume first");
@@ -156,7 +189,24 @@ function Profile() {
         <p className="text-gray-400 mt-3 mb-8">
           Manage your personal and professional information.
         </p>
+        <div className="mb-8 bg-[#111827] border border-gray-800 rounded-xl p-5">
+       <div className="flex justify-between mb-2">
+       <span className="text-gray-300">
+      Profile Completion
+       </span>
 
+      <span className="text-blue-400 font-semibold">
+      {profileCompletion}%
+    </span>
+  </div>
+
+  <div className="w-full bg-gray-700 rounded-full h-3">
+    <div
+      className="bg-blue-600 h-3 rounded-full"
+      style={{ width: `${profileCompletion}%` }}
+    ></div>
+  </div>
+</div>
         <div className="bg-[#111827] border border-gray-800 rounded-xl p-8">
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -280,7 +330,85 @@ function Profile() {
                 className="w-full bg-[#030712] border border-gray-700 rounded-lg px-4 py-3 outline-none"
               />
             </div>
+           {/* Education */}
+<div>
+  <label className="block text-gray-400 mb-2">
+    Education
+  </label>
 
+  <input
+    type="text"
+    value={profile.education}
+    onChange={(e) =>
+      setProfile({
+        ...profile,
+        education: e.target.value,
+      })
+    }
+    placeholder="B.Tech CSE"
+    className="w-full bg-[#030712] border border-gray-700 rounded-lg px-4 py-3 outline-none"
+  />
+</div>
+
+{/* Experience */}
+<div>
+  <label className="block text-gray-400 mb-2">
+    Experience
+  </label>
+
+  <input
+    type="text"
+    value={profile.experience}
+    onChange={(e) =>
+      setProfile({
+        ...profile,
+        experience: e.target.value,
+      })
+    }
+    placeholder="Fresher / 1 year"
+    className="w-full bg-[#030712] border border-gray-700 rounded-lg px-4 py-3 outline-none"
+  />
+</div>
+
+{/* Projects */}
+<div>
+  <label className="block text-gray-400 mb-2">
+    Projects
+  </label>
+
+  <input
+    type="text"
+    value={profile.projects}
+    onChange={(e) =>
+      setProfile({
+        ...profile,
+        projects: e.target.value,
+      })
+    }
+    placeholder="JobConnect, Expense Tracker"
+    className="w-full bg-[#030712] border border-gray-700 rounded-lg px-4 py-3 outline-none"
+  />
+</div>
+
+{/* Portfolio */}
+<div>
+  <label className="block text-gray-400 mb-2">
+    Portfolio
+  </label>
+
+  <input
+    type="text"
+    value={profile.portfolio}
+    onChange={(e) =>
+      setProfile({
+        ...profile,
+        portfolio: e.target.value,
+      })
+    }
+    placeholder="Portfolio URL"
+    className="w-full bg-[#030712] border border-gray-700 rounded-lg px-4 py-3 outline-none"
+     />
+    </div>
           </div>
 
           {/* About */}
