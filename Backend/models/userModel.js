@@ -47,6 +47,36 @@ const userSchema = new mongoose.Schema(
       default: [],
     },
 
+    github: {
+      type: String,
+      default: "",
+    },
+
+    linkedin: {
+      type: String,
+      default: "",
+    },
+
+    education: {
+      type: String,
+      default: "",
+    },
+
+    experience: {
+      type: String,
+      default: "",
+    },
+
+    projects: {
+      type: String,
+      default: "",
+    },
+
+    portfolio: {
+      type: String,
+      default: "",
+    },
+
     isBlocked: {
       type: Boolean,
       default: false,
