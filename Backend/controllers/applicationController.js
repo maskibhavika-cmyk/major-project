@@ -1,6 +1,6 @@
 const Application = require("../models/applicationModel");
 const Job = require("../models/jobModel");
-
+const Notification = require("../models/notificationModel");
 // Apply for Job
 const applyJob = async (req, res) => {
   try {
@@ -123,6 +123,10 @@ const updateApplicationStatus = async (req, res) => {
     application.status = status;
 
     await application.save();
+    await Notification.create({
+  user: application.user,
+  message: `Your application status has been updated to ${status}`,
+});
 
     res.status(200).json({
       message: "Application status updated successfully",

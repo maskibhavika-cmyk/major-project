@@ -18,6 +18,8 @@ function Profile() {
 
   const [resume, setResume] = useState(null);
   const [resumePath, setResumePath] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicturePath, setProfilePicturePath] = useState("");
 
   // Get profile
   useEffect(() => {
@@ -51,6 +53,7 @@ function Profile() {
         });
 
         setResumePath(user.resume || "");
+        setProfilePicturePath(user.profilePicture || "");
       } catch (error) {
         console.log(
           "Profile Error:",
@@ -173,6 +176,48 @@ const profileCompletion = Math.round(
       );
     }
   };
+  const handleProfilePictureUpload = async () => {
+  if (!profilePicture) {
+    alert("Please select a profile picture first");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const formData = new FormData();
+    formData.append("profilePicture", profilePicture);
+
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/users/profile/picture",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setProfilePicturePath(response.data.user.profilePicture);
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(response.data.user)
+    );
+
+    alert("Profile picture uploaded successfully");
+  } catch (error) {
+    console.log(
+      "Profile Picture Upload Error:",
+      error.response?.data || error.message
+    );
+
+    alert(
+      error.response?.data?.message ||
+        "Failed to upload profile picture"
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#030712] text-white py-12 px-6">
@@ -438,6 +483,47 @@ const profileCompletion = Math.round(
           >
             Save Profile
           </button>
+          {/* Profile Picture */}
+         <div className="mt-8 border-t border-gray-700 pt-6">
+          <h2 className="text-xl font-semibold mb-4">
+           Profile Picture
+           </h2>
+
+       {profilePicturePath && (
+       <img
+      src={`http://localhost:8080/${profilePicturePath}`}
+      alt="Profile"
+      className="w-28 h-28 rounded-full object-cover border border-gray-700 mb-4"
+    />
+  )}
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => setProfilePicture(e.target.files[0])}
+    className="block w-full text-gray-300"
+  />
+
+  {profilePicture && (
+    <p className="text-gray-400 mt-3">
+      Selected: {profilePicture.name}
+    </p>
+  )}
+
+  <button
+    type="button"
+    onClick={handleProfilePictureUpload}
+    className="mt-4 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium"
+  >
+    Upload Profile Picture
+  </button>
+
+  {profilePicturePath && (
+    <p className="text-green-400 mt-4">
+      Profile picture uploaded successfully.
+    </p>
+  )}
+</div>
 
           {/* Resume */}
           <div className="mt-8 border-t border-gray-700 pt-6">
