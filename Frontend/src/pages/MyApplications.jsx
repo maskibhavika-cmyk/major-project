@@ -58,18 +58,17 @@ function MyApplications() {
                 key={application._id}
                 className="bg-[#111827] border border-gray-800 rounded-xl p-6"
               >
+
                 <h2 className="text-xl font-semibold">
                   {application.job?.title || "Job Title"}
                 </h2>
 
                 <p className="text-gray-400 mt-2">
-                  Company:{" "}
-                  {application.job?.company || "N/A"}
+                  Company: {application.job?.company || "N/A"}
                 </p>
 
                 <p className="text-gray-400 mt-1">
-                  Location:{" "}
-                  {application.job?.location || "N/A"}
+                  Location: {application.job?.location || "N/A"}
                 </p>
 
                 <p className="text-gray-400 mt-1">
@@ -78,8 +77,7 @@ function MyApplications() {
                 </p>
 
                 <p className="text-gray-400 mt-1">
-                  Job Type:{" "}
-                  {application.job?.jobType || "N/A"}
+                  Job Type: {application.job?.jobType || "N/A"}
                 </p>
 
                 <p className="text-gray-500 mt-4">
@@ -89,9 +87,46 @@ function MyApplications() {
                   ).toLocaleDateString()}
                 </p>
 
-                <p className="text-yellow-400 mt-3 font-medium">
-                  Status: {application.status}
-                </p>
+                {/* Application Status */}
+                <div className="mt-4">
+                  <p className="text-gray-400">
+                    Application Status
+                  </p>
+
+                  <p className="text-yellow-400 font-semibold mt-1 capitalize">
+                    {application.status}
+                  </p>
+                </div>
+
+                {/* Interview Details */}
+                {application.interviewDate && (
+                  <div className="mt-5 bg-gray-800 rounded-lg p-4">
+
+                    <p className="text-green-400 font-semibold">
+                      Interview Scheduled
+                    </p>
+
+                    <p className="text-gray-300 mt-2">
+                      Date:{" "}
+                      {new Date(
+                        application.interviewDate
+                      ).toLocaleDateString()}
+                    </p>
+
+                    <p className="text-gray-300 mt-1">
+                      Time: {application.interviewTime}
+                    </p>
+
+                    {application.interviewDetails && (
+                      <p className="text-gray-300 mt-1">
+                        Details:{" "}
+                        {application.interviewDetails}
+                      </p>
+                    )}
+
+                  </div>
+                )}
+
               </div>
             ))}
 
