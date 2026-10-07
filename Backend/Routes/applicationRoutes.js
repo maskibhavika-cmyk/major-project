@@ -1,7 +1,7 @@
 const express = require("express");
 
-const { applyJob, getApplicantsByJob, updateApplicationStatus,  getMyApplications,} = require("../controllers/applicationController");
-  
+const { applyJob,getApplicantsByJob,updateApplicationStatus, scheduleInterview, getMyApplications,} = require("../controllers/applicationController");
+ 
 
 const authMiddleware = require("../Middleware/authMiddleware");
 const authorizeRoles = require("../Middleware/roleMiddleware");
@@ -39,5 +39,11 @@ router.put(
   authorizeRoles("recruiter"),
   updateApplicationStatus
 );
-
+// Recruiter: Schedule interview
+router.put(
+  "/:id/schedule-interview",
+  authMiddleware,
+  authorizeRoles("recruiter"),
+  scheduleInterview
+);
 module.exports = router;

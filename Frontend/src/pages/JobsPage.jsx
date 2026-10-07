@@ -5,12 +5,14 @@ import axios from "axios";
 function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [experience, setExperience] = useState("");
   const [salary, setSalary] = useState("");
+
 
   const jobsPerPage = 3;
 
@@ -32,6 +34,13 @@ function Jobs() {
     fetchJobs();
   }, []);
 
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setSearch(searchInput);
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, [searchInput]);
   // Filter/sort change hone par Page 1 par aayega
   useEffect(() => {
     setCurrentPage(1);
@@ -150,8 +159,8 @@ function Jobs() {
           {/* Search */}
           <input
             type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInput}
+             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by job title or company..."
             className="w-full bg-[#111827] border border-gray-800 text-white placeholder-gray-500 rounded-lg px-5 py-3 outline-none focus:border-blue-600"
           />

@@ -7,7 +7,7 @@ const applicationSchema = new mongoose.Schema(
       ref: "Job",
       required: true,
     },
-     
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -16,7 +16,26 @@ const applicationSchema = new mongoose.Schema(
 
     status: {
       type: String,
+      enum: [
+        "applied",
+        "shortlisted",
+        "interview",
+        "selected",
+        "rejected",
+      ],
       default: "applied",
+    },
+
+    interviewDate: {
+      type: Date,
+    },
+
+    interviewTime: {
+      type: String,
+    },
+
+    interviewDetails: {
+      type: String,
     },
   },
   {
