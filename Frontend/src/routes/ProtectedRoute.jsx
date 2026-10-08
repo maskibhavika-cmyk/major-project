@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ProtectedRoute({ allowedRoles }) {
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { token, user } = useSelector((state) => state.auth);
 
   if (!token) {
     return <Navigate to="/login" replace />;
